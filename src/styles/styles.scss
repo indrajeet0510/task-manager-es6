@@ -1,0 +1,57 @@
+
+@import './colors.scss';
+
+html, body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0 auto;
+    text-align: center;
+    .container{
+        margin: 10px auto;
+        text-align: center;
+        .days-container {
+            height: auto;
+            width: 300px;
+            overflow: scroll;
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            .day {
+                border: 1px solid $color-silver;
+                border-left: 0;
+                border-right: 0;
+                padding: 10px;
+                margin: 0;
+                background: $color-white;
+                color: $color-black;
+                cursor: pointer;
+                .input-container {
+                    text-align: left;
+                    input[name='taskTitle'], textarea {
+                        margin: 10px 0;
+                        border: 1px solid #CCC;
+                        padding: 5px;
+                        display: block;
+                        font-family: 'Segoe UI', sans-serif;
+                    }
+                }
+                &.active {
+                    background: $color-white;
+                    color: $color-black;
+                    transition: height 2s;
+                    .task-list {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                        text-align: left;
+                        .task {
+                            padding: 5px;
+                            background: #EEEEEE;
+                            color: $color-black;
+                            margin: 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
