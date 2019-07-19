@@ -1,3 +1,6 @@
+/**
+ * Calendar: Provides base functionlity to generate days from a particular date
+ */
 export class Calendar {
     constructor() {
         this.months = [
@@ -25,6 +28,11 @@ export class Calendar {
         ];
     }
 
+    /**
+     * Get a list of days from a particular date
+     * @param {Date} fromDate 
+     * @param {number} size 
+     */
     getDays(fromDate, size) {
         const dayList = [];
         if (fromDate instanceof Date) {
@@ -47,10 +55,3 @@ export class Calendar {
 }
 
 export default Calendar;
-
-/**
- * Hello WOrld
- * I am good
- * Hello world
- * helloworld
- */

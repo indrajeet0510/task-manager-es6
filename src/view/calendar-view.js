@@ -4,38 +4,61 @@ import Calendar from '../business/calendar';
 
 const CSS_CLASS_ACTIVE = ' active';
 
+/**
+ * CalendarView: View class implementing functionality for rendering and updating the view based on model changes
+ */
 export class CalendarView {
-    constructor() {
-        const daysContainer = document.getElementById('daysContainer');
-        
-        const cal = new Calendar();
-        const daysList = cal.getDays(new Date(), 20);
-
+    /**
+     * Create a calendar view from the date to the next number of days
+     * @param {Date} fromDate 
+     * @param {number} numberOfDays 
+     */
+    constructor(fromDate, numberOfDays) {
+        this.fromDate = fromDate;
+        this.numberOfDays = numberOfDays;
         this.taskManager = new TaskManager();
-
-        for (let day of daysList) {
-            (() => {
-                // this.generateDummyTasksForDay(day);
-
-                const dayEl = document.createElement('li');
-                dayEl.className = 'day';
-                dayEl.setAttribute('key', day.key);
-                dayEl.appendChild(this.createDayInfoEl(day));
-
-                const tasksList = this.taskManager.getTasks(day.key);
-
-                const smTextEl = document.createTextNode(`Total tasks: ${tasksList.length}`);
-                const smEl = document.createElement('small');
-                smEl.appendChild(smTextEl);
-
-                dayEl.appendChild(smEl);
-                dayEl.appendChild(this.createTaskInputEl(day));
-                dayEl.addEventListener('click', this.dayElEventListener.bind(this));
-                daysContainer.appendChild(dayEl);
-            })(day);
-        }
+        this.rootElement = document.getElementById('daysContainer');
+        
+        this.calendar = new Calendar();
+    
+        const daysListEl = this.getDaysListEl();
+        this.rootElement.appendChild(daysListEl);
     }
 
+    /**
+     * Get list of days from date to next number days
+     */
+    getDaysListEl() {
+        const daysList = this.calendar.getDays(this.fromDate, this.numberOfDays);
+        const daysListEl = document.createDocumentFragment();
+
+        for (let day of daysList) {
+            // this.generateDummyTasksForDay(day);
+
+            const dayEl = document.createElement('li');
+            dayEl.className = 'day';
+            dayEl.setAttribute('key', day.key);
+            dayEl.appendChild(this.createDayInfoEl(day));
+
+            const tasksList = this.taskManager.getTasks(day.key);
+
+            const smTextEl = document.createTextNode(`Total tasks: ${tasksList.length}`);
+            const smEl = document.createElement('small');
+            smEl.appendChild(smTextEl);
+
+            dayEl.appendChild(smEl);
+            dayEl.appendChild(this.createTaskInputEl(day));
+            dayEl.addEventListener('click', this.dayElEventListener.bind(this));
+            daysListEl.appendChild(dayEl);
+    }
+
+        return daysListEl;
+    }
+
+    /**
+     * Event listener to expand and collapse date manager
+     * @param {Event} e 
+     */
     dayElEventListener(e) {
         if (e.currentTarget.className.includes(CSS_CLASS_ACTIVE)) {
             const listEl = e.currentTarget.querySelectorAll('.task-list');
@@ -51,12 +74,11 @@ export class CalendarView {
         console.log('mouseeneter', key);
     }
 
-    getTaskManager() {
-        return this.taskManager;
-    }
-
-    /// 
-
+    /**
+     * Create elements which displays the date information
+     * @param {*} day 
+     * @param {*} dayTaskList 
+     */
     createDayInfoEl(day, dayTaskList) {
         const dayInfoEl = document.createElement('h2');
         const dayTextNode = document.createTextNode(`
@@ -67,6 +89,10 @@ export class CalendarView {
         return dayInfoEl;
     }
     
+    /**
+     * Create elements which renders the input fields for creating new tasks for corresponding date
+     * @param {*} day 
+     */
     createTaskInputEl(day) {
         const titleInputEl = document.createElement('input');
         titleInputEl.type = 'text';
@@ -95,6 +121,10 @@ export class CalendarView {
         return dFrag;
     }
     
+    /**
+     * Create elements to render taskList for all the tasks
+     * @param {TaskList} taskList 
+     */
     createTaskList(taskList) {
         let taskListFragment = null;
         if(typeof document.createDocumentFragment === 'function') {
@@ -116,7 +146,10 @@ export class CalendarView {
     }
     
     
-    
+    /**
+     * Create elements to render a single task on UI
+     * @param {Task} task 
+     */
     createTaskEl(task) {
             const taskEl = document.createElement('li');
             taskEl.classList.add('task');
@@ -145,6 +178,10 @@ export class CalendarView {
             return taskEl;
     }
     
+    /**
+     * Delete event handler for removing a task
+     * @param {Event} e 
+     */
     deleteBtnListener(e) {
         console.log(e.currentTarget);
         const key = e.currentTarget.parentNode.getAttribute('key');
@@ -163,6 +200,10 @@ export class CalendarView {
         
     }
     
+    /**
+     * Submit handler for handling the creation of new task
+     * @param {Event} e 
+     */
     submitBtnListener(e) {
         e.stopPropagation();
         const t = e.currentTarget.parentNode;
@@ -191,15 +232,6 @@ export class CalendarView {
             ulList[0].prepend(this.createTaskEl(tasks[tasks.length - 1]));
         }
     }
-
-    generateDummyTasksForDay(day) {
-        for(let i = 0; i < 7; i++) {
-            const task = new Task(null, `Task ${i+1}`, `Description for task ${i+1}`, true);
-            console.log(task);
-            this.taskManager.addTask(day.key, task);
-        }
-    }
-    ///
 }
 
 export default CalendarView;
