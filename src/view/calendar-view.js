@@ -1,4 +1,4 @@
-import Task from '../domain/task';
+import Task from '../models/task';
 import TaskManager from '../business/task-manager';
 import Calendar from '../business/calendar';
 

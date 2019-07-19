@@ -1,5 +1,5 @@
-import { Task } from "../domain/task";
-import { TaskList } from "../domain/task-list";
+import { Task } from "../models/task";
+import { TaskList } from "../models/task-list";
 
 /**
  * TaskManager: Manages tasks for all the days
